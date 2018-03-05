@@ -18,9 +18,7 @@ RUN pip3.6 install --no-input --upgrade --no-cache-dir pip setuptools wheel
 RUN pip3.6 install --isolated --no-input --compile --exists-action=a --disable-pip-version-check --use-wheel --no-cache-dir matplotlib
 
 WORKDIR /opt
-RUN git clone --depth=1 https://github.com/facebookresearch/faiss
-WORKDIR /opt/faiss
-
+RUN git clone --depth=1 https://github.com/facebookresearch/faiss .
 
 ENV BLASLDFLAGS /usr/lib/libopenblas.so.0
 RUN mv example_makefiles/makefile.inc.Linux ./makefile.inc
