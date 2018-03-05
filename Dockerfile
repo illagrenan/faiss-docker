@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     swig \
     git \
     wget \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6
