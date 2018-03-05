@@ -1,12 +1,15 @@
 FROM nvidia/cuda:8.0-devel-ubuntu16.04
 LABEL authors="Vašek Dohnal <vaclav.dohnal@gmail.com>"
 
+RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common && add-apt-repository ppa:jonathonf/python-3.6 -y
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libopenblas-dev \
     python-numpy \
-    python-dev \
+    python3.6 \
+    python3.6-dev \
+    python3.6-pip \
     swig \
-    git \ python-pip \
+    git \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
