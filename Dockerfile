@@ -7,13 +7,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python-numpy \
     python3.6 \
     python3.6-dev \
-    python3.6-pip \
     swig \
     git \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --isolated --no-input --compile --exists-action=a --disable-pip-version-check --use-wheel --no-cache-dir matplotlib
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6
+RUN pip3.6 install --no-input --upgrade --no-cache-dir pip setuptools wheel
+RUN pip3.6 install --isolated --no-input --compile --exists-action=a --disable-pip-version-check --use-wheel --no-cache-dir matplotlib
 
 WORKDIR /opt
 RUN git clone --depth=1 https://github.com/facebookresearch/faiss
