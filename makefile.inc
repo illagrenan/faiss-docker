@@ -124,8 +124,6 @@ PYTHONCFLAGS=-I/usr/include/python3.6m/ -I/usr/local/lib/python3.6/dist-packages
 # Cuda GPU flags
 ###########################################################################
 
-
-
 # root of the cuda 8 installation
 CUDAROOT=/usr/local/cuda-8.0/
 
