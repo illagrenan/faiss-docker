@@ -24,9 +24,7 @@ RUN python3.6 -c "import distutils.sysconfig; print(distutils.sysconfig.get_pyth
 RUN python3.6 -c "import numpy ; print(numpy.get_include())"
 RUN git clone --depth=1 https://github.com/facebookresearch/faiss .
 
-#ENV BLASLDFLAGS /usr/lib/libopenblas.so.0
 COPY ./makefile.inc ./makefile.inc
-#RUN mv example_makefiles/makefile.inc.Linux ./makefile.inc
 
 RUN make tests/test_blas -j $(nproc) && \
     make -j $(nproc) && \
