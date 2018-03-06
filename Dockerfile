@@ -4,9 +4,10 @@ LABEL authors="Vašek Dohnal <vaclav.dohnal@gmail.com>"
 RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common && add-apt-repository ppa:jonathonf/python-3.6 -y
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libopenblas-dev \
-    python-numpy \
+#    python-numpy \
     python3.6 \
     python3.6-dev \
+#    python-pip \
     swig \
     git \
     wget \
@@ -15,21 +16,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6
 RUN pip3.6 install --no-input --upgrade --no-cache-dir pip setuptools wheel
-RUN pip3.6 install --isolated --no-input --compile --exists-action=a --disable-pip-version-check --use-wheel --no-cache-dir matplotlib
+RUN pip3.6 install --isolated --no-input --compile --exists-action=a --disable-pip-version-check --use-wheel --no-cache-dir matplotlib numpy
 
 WORKDIR /opt
+
+RUN python3.6 -c "import distutils.sysconfig; print(distutils.sysconfig.get_python_inc())"
+RUN python3.6 -c "import numpy ; print(numpy.get_include())"
 RUN git clone --depth=1 https://github.com/facebookresearch/faiss .
 
-ENV BLASLDFLAGS /usr/lib/libopenblas.so.0
-RUN mv example_makefiles/makefile.inc.Linux ./makefile.inc
+#ENV BLASLDFLAGS /usr/lib/libopenblas.so.0
+COPY ./makefile.inc ./makefile.inc
+#RUN mv example_makefiles/makefile.inc.Linux ./makefile.inc
 
 RUN make tests/test_blas -j $(nproc) && \
     make -j $(nproc) && \
-    make tests/demo_sift1M -j $(nproc)
-
-RUN make py
+    make demos/demo_sift1M -j $(nproc) && \
+    make py
 
 RUN cd gpu && \
     make -j $(nproc) && \
     make test/demo_ivfpq_indexing_gpu && \
     make py
+
+ENV PYTHONPATH $PYTHONPATH:/opt/faiss
