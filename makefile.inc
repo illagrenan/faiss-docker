@@ -8,7 +8,6 @@
 # -*- makefile -*-
 # tested on CentOS 7, Ubuntu 16 and Ubuntu 14, see below to adjust flags to distribution.
 
-
 CC=g++
 CXX=g++
 
@@ -20,7 +19,6 @@ LDFLAGS=-g -fPIC  -fopenmp
 SHAREDEXT=so
 SHAREDFLAGS=-shared
 FAISSSHAREDFLAGS=-shared
-
 
 ##########################################################################
 # Uncomment one of the 4 BLAS/Lapack implementation options
@@ -96,7 +94,6 @@ BLASLDFLAGS?=/usr/lib/libopenblas.so.0
 # BLASCFLAGS=-DFINTEGER=int
 # BLASLDFLAGS=/usr/lib64/libblas.so.3 /usr/lib64/liblapack.so.3.2
 #
-
 
 ##########################################################################
 # SWIG and Python flags
