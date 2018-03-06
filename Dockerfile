@@ -4,7 +4,7 @@
 FROM nvidia/cuda:8.0-devel-ubuntu16.04 as builder
 LABEL authors="Vašek Dohnal <vaclav.dohnal@gmail.com>"
 
-RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common && add-apt-repository ppa:jonathonf/python-3.6 -y
+RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common && add-apt-repository ppa:deadsnakes/ppa -y
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libopenblas-dev \
     python3.6 \
@@ -37,6 +37,7 @@ RUN cd gpu && \
     make test/demo_ivfpq_indexing_gpu && \
     make py
 
+RUN python3.6 -c "import faiss; print(dir(faiss))"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Stage 2
