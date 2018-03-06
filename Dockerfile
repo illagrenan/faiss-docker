@@ -41,14 +41,25 @@ RUN cd gpu && \
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Stage 2
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-FROM python:3.6.4
+FROM illagrenan/ubuntu1604-python36
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libopenblas-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3.6 install --isolated --no-input --compile --exists-action=a --disable-pip-version-check --use-wheel --no-cache-dir numpy
 
 RUN mkdir -p /opt/faiss
 
 # https://github.com/facebookresearch/faiss/blob/master/INSTALL.md#python
-COPY --from=builder /opt/faiss.py /opt/faiss/
 COPY --from=builder /opt/swigfaiss.py /opt/faiss/
+COPY --from=builder /opt/swigfaiss_gpu.py /opt/faiss/
+COPY --from=builder /opt/faiss.py /opt/faiss/
+
 COPY --from=builder /opt/_swigfaiss.so /opt/faiss/
+COPY --from=builder /opt/_swigfaiss_gpu.so /opt/faiss/
 
 ENV PYTHONPATH $PYTHONPATH:/opt/faiss
-RUN python -c "import faiss; print(dir(faiss))"
+ENV BLASLDFLAGS /usr/lib/libopenblas.so.0
+
+RUN python3.6 -c "import faiss; print(dir(faiss))"
