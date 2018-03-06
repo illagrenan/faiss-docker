@@ -1,4 +1,7 @@
-FROM nvidia/cuda:8.0-devel-ubuntu16.04
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Stage 1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+FROM nvidia/cuda:8.0-devel-ubuntu16.04 as builder
 LABEL authors="Vašek Dohnal <vaclav.dohnal@gmail.com>"
 
 RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common && add-apt-repository ppa:jonathonf/python-3.6 -y
@@ -34,4 +37,18 @@ RUN cd gpu && \
     make test/demo_ivfpq_indexing_gpu && \
     make py
 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Stage 2
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+FROM python:3.6.4
+
+RUN mkdir -p /opt/faiss
+
+# https://github.com/facebookresearch/faiss/blob/master/INSTALL.md#python
+COPY --from=builder /opt/faiss.py /opt/faiss/
+COPY --from=builder /opt/swigfaiss.py /opt/faiss/
+COPY --from=builder /opt/_swigfaiss.so /opt/faiss/
+
 ENV PYTHONPATH $PYTHONPATH:/opt/faiss
+RUN python -c "import faiss; print(dir(faiss))"
